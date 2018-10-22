@@ -3,6 +3,8 @@
  * 
  * Note: This file contains only code relevant to drawing the tree.
  * It should not be modified.
+ * 
+ * Mod: Paulina Olivas
  */
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,11 @@ namespace Ksu.Cis300.PriorityQueueLibrary
     /// An immutable binary tree node that can draw itself.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the tree.</typeparam>
-    public partial class BinaryTreeNode<T> : ITree
+    public partial class LeftistTree<T> : ITree
     {
+        //globa value of the null paths length
+        private int _nullPathLength;
+
         /// <summary>
         /// Gets the children of this node.
         /// </summary>
@@ -27,8 +32,21 @@ namespace Ksu.Cis300.PriorityQueueLibrary
             get
             {
                 ITree[] children = new ITree[2];
-                children[0] = LeftChild;
-                children[1] = RightChild;
+
+                int left = NullPathLength(LeftChild);
+                int right = NullPathLength(RightChild);
+
+                if(left < right)
+                {
+                    children[0] = LeftChild;
+                    children[1] = RightChild;
+                }
+                else
+                {
+                    children[0] = RightChild;
+                    children[1] = LeftChild;
+                }
+
                 return children;
             }
         }
@@ -43,5 +61,23 @@ namespace Ksu.Cis300.PriorityQueueLibrary
         /// Gets the object to be drawn as the contents of this node.
         /// </summary>
         object ITree.Root => Data;
+
+        /// <summary>
+        /// Finds the null path lenght of the given tree
+        /// </summary>
+        /// <param name="t">Tree</param>
+        /// <returns>Returns 0 if the given tree is null or the
+        /// value stored of _nullPathLength </returns>
+        public static int NullPathLength(LeftistTree<T> t)
+        {
+            if (t.Data == null) { 
+                return 0;
+            }
+
+
+            return t._nullPathLength;
+        }
+
+
     }
 }
